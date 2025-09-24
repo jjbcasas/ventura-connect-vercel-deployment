@@ -34,21 +34,8 @@ const __dirname = path.dirname(__filename)
 
 app.set('trust proxy', 1)
 
-
-// use .env file in config folder
-dotenv.config({ path: './backend/config/.env'})
-
-// Passport config
-passportConfig(passport)
-
-// Passport google-oauth20 config
-passportGoogleConfig(passport)
-
 // connect to the Database
 connectDB()
-
-// static folder
-app.use(express.static('public'))
 
 // body parsing, so we can pull something from the request
 app.use(express.urlencoded({extended: true}))
@@ -81,7 +68,7 @@ app.use(
         store: MongoStore.create({
             mongoUrl: process.env.DB_STRING
         }),
-        // cookie configuration object for frontend and backend that are deployed on different domains
+         // cookie configuration object for frontend and backend that are deployed on different domains
         cookie: {
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             secure: process.env.NODE_ENV === 'production', // MUST be set to true for sameSite: 'none'
@@ -105,7 +92,6 @@ app.use('/api/feed', feedRoutes)
 app.use('/api/profile', profileRoutes)
 app.use('/api/post', postRoutes)
 
-// server running
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}, you better catch it`)
-})
+
+// This is the correct way to export your app for Vercel
+export default app
