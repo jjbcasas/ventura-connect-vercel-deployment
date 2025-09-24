@@ -105,11 +105,15 @@ app.use('/api/feed', feedRoutes)
 app.use('/api/profile', profileRoutes)
 app.use('/api/post', postRoutes)
 
-app.use(express.static(path.join(__dirname, 'dist')))
-// app.use(express.static(path.join(__dirname, '../frontend/dist')))
-app.get('/*path', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
-})
+// Serve static assets if in production
+if ( process.env.NODE_ENV === 'production') {
+    // Set static folder
+    app.use(express.static(path.join(__dirname, '../frontend/dist')))
+
+    app.get('/*path', (req, res) => {
+        res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'))
+    })
+}
 
 // server running
 app.listen(process.env.PORT, () => {
